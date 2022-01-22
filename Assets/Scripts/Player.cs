@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     public AudioClip _pickupsound;
     private AudioSource _Audiosource;
     public GameObject _startText;
+    private bool _canTimerStart = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +40,13 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        StartCoroutine(Timer());
+        if (_isgameover == false && _canTimerStart == true)
+        {
+            _timeleft -= Time.deltaTime;
+            _uiManager.updateTime(_timeleft);
+            _startText.SetActive(false);
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
@@ -91,12 +99,7 @@ public class Player : MonoBehaviour
     public IEnumerator Timer()
     {
         yield return new WaitForSeconds(2);
-        if (_isgameover == false)
-        {
-            _timeleft -= Time.deltaTime;
-            _uiManager.updateTime(_timeleft);
-            _startText.SetActive(false);
-        }
+        _canTimerStart = true;
 
     }
     public IEnumerator Playermovement()
